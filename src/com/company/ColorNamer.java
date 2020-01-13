@@ -45,6 +45,98 @@ public class ColorNamer {
         return closest;
     }
 
+    public static double elementLuminance(int R8bit) {
+        if (R8bit <= 10) {
+            return R8bit / 3294.6; // For very low values, linear luminance at RsRGB / 12.92
+        }
+        else {
+            double RsRGB = R8bit / 255.0;
+            return (Math.pow(((RsRGB + 0.055) / 1.055), 2.4)); // Luminance rises faster than square of the sRGB element
+        }
+    }
+
+    public static double relativeLuminance(int[] RGB) {
+        int R8bit = RGB[0];
+        int G8bit = RGB[1];
+        int B8bit = RGB[2];
+        double R = elementLuminance(R8bit);
+        double G = elementLuminance(G8bit);
+        double B = elementLuminance(B8bit);
+        return 0.2126*R + 0.7152*G + 0.0722*B;
+    }
+
+    public static double contrastRatio(int[] RGB1, int[] RGB2) {
+        double lum1 = relativeLuminance(RGB1);
+        double lum2 = relativeLuminance(RGB2);
+        double greater = lum1;
+        double lesser;
+        if (lum2 > lum1) {
+            greater = lum2;
+            lesser = lum1;
+        }
+        else {
+            lesser = lum2;
+        }
+        return ((greater + 0.05) / (lesser + 0.05));
+    }
+
+    protected static int getTargetRGBDarker(double lum, double ratio) {
+        double targetLum = ((lum + .05) / ratio) - .05;
+        double deExp = Math.pow(targetLum, (1/2.4));
+        double targetFrac = (deExp * 1.055) - 0.055;
+        return (int) Math.floor(targetFrac * 255);
+    }
+
+    public static void printDarkerContrastColors(int[] RGB) {
+        double lum = relativeLuminance(RGB);
+        if (lum >= .1) {
+            int targetRGB = getTargetRGBDarker(lum, 3.0);
+            System.out.println("A grayscale color that is darker than this " +
+                    "and has a contrast ratio of 3 or greater with this color is" +
+                    "[ " + targetRGB + ", " + targetRGB + ", " + targetRGB + "]");
+        }
+        if (lum >= .175) {
+            int targetRGB = getTargetRGBDarker(lum, 4.5);
+            System.out.println("A grayscale color that is darker than this " +
+                    "and has a contrast ratio of 4.5 or greater with this color is" +
+                    "[ " + targetRGB + ", " + targetRGB + ", " + targetRGB + "]");
+        }
+        if (lum >= .3) {
+            int targetRGB = getTargetRGBDarker(lum, 7.0);
+            System.out.println("A grayscale color that is darker than this " +
+                    "and has a contrast ratio of 7 or greater with this color is" +
+                    "[ " + targetRGB + ", " + targetRGB + ", " + targetRGB + "]");
+        }
+    }
+
+    protected static int getTargetRGBBrighter(double lum, double ratio) {
+        double targetLum = ((lum + .05) * ratio) - .05;
+        double deExp = Math.pow(targetLum, (1/2.4));
+        double targetFrac = (deExp * 1.055) - 0.055;
+        return (int) Math.ceil(targetFrac * 255);
+    }
+
+    public static void printLighterContrastColors(int[] RGB) {
+        double lum = relativeLuminance(RGB);
+        if (lum <= .3) {
+            int targetRGB = getTargetRGBBrighter(lum, 3.0);
+            System.out.println("A grayscale color that is brighter than this " +
+                    "and has a contrast ratio of 3 or greater with this color is" +
+                    "[ " + targetRGB + ", " + targetRGB + ", " + targetRGB + "]");
+        }
+        if (lum <= (11.0/60.0)) {
+            int targetRGB = getTargetRGBBrighter(lum, 4.5);
+            System.out.println("A grayscale color that is brighter than this " +
+                    "and has a contrast ratio of 4.5 or greater with this color is" +
+                    "[ " + targetRGB + ", " + targetRGB + ", " + targetRGB + "]");
+        }
+        if (lum <= .1) {
+            int targetRGB = getTargetRGBBrighter(lum, 7.0);
+            System.out.println("A grayscale color that is brighter than this " +
+                    "and has a contrast ratio of 7 or greater with this color is" +
+                    "[ " + targetRGB + ", " + targetRGB + ", " + targetRGB + "]");
+        }
+    }
 
 
 }
