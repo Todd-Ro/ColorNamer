@@ -82,8 +82,14 @@ public class ColorNamer {
 
     protected static int getTargetRGBDarker(double lum, double ratio) {
         double targetLum = ((lum + .05) / ratio) - .05;
-        double deExp = Math.pow(targetLum, (1/2.4));
-        double targetFrac = (deExp * 1.055) - 0.055;
+        double targetFrac;
+        if (targetLum < (663.0 / 16384)) {
+            targetFrac = targetLum * 12.92; // For when the RGB values will end up being 10 or less
+        }
+        else {
+            double deExp = Math.pow(targetLum, (1/2.4));
+            targetFrac = (deExp * 1.055) - 0.055;
+        }
         return (int) Math.floor(targetFrac * 255);
     }
 
@@ -111,8 +117,14 @@ public class ColorNamer {
 
     protected static int getTargetRGBBrighter(double lum, double ratio) {
         double targetLum = ((lum + .05) * ratio) - .05;
-        double deExp = Math.pow(targetLum, (1/2.4));
-        double targetFrac = (deExp * 1.055) - 0.055;
+        double targetFrac;
+        if (targetLum < (663.0 / 16384)) {
+            targetFrac = targetLum * 12.92;
+        }
+        else {
+            double deExp = Math.pow(targetLum, (1/2.4));
+            targetFrac = (deExp * 1.055) - 0.055;
+        }
         return (int) Math.ceil(targetFrac * 255);
     }
 
