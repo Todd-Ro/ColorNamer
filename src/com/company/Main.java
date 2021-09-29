@@ -24,7 +24,17 @@ public class Main {
         ColorNamer.printLighterContrastColors(magenta);
         System.out.println();
 
+        int[] dark = {93, 93, 93};
+        System.out.println(ColorNamer.relativeLuminance(dark));
+        System.out.println("93, 93, 93 has the following contrast colors: ");
+        ColorNamer.printDarkerContrastColors(dark);
+        ColorNamer.printLighterContrastColors(dark);
         System.out.println();
+
+        System.out.println();
+
+
+
 
 
 
