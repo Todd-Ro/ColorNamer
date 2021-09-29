@@ -22,6 +22,19 @@ public class Main {
         System.out.println("Magenta has the following contrast colors: ");
         ColorNamer.printDarkerContrastColors(magenta);
         ColorNamer.printLighterContrastColors(magenta);
+        System.out.println();
 
+        System.out.println();
+
+
+
+        double veryHighBandLowEndRatio = Math.pow(21, 252.0/253);
+        System.out.println(veryHighBandLowEndRatio);
+        double veryHighBandLowEndLum = ColorNamer.getRelativeLuminanceFromContRatioWithBlack(veryHighBandLowEndRatio);
+        System.out.println(veryHighBandLowEndLum);
+        System.out.println(CountColorsInBrightnessRange.countColorsAboveBrightnessThreshold(veryHighBandLowEndLum));
+        double almostAsHighBand = Math.pow(21, 251.0/253);
+        double almostAsHighLum = ColorNamer.getRelativeLuminanceFromContRatioWithBlack(almostAsHighBand);
+        System.out.println(CountColorsInBrightnessRange.countColorsAboveBrightnessThreshold(almostAsHighLum));
     }
 }

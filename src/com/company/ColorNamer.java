@@ -94,24 +94,25 @@ public class ColorNamer {
     }
 
     public static void printDarkerContrastColors(int[] RGB) {
+        //Helps find colors that meet accessible standards for adequate contrast between font color and background
         double lum = relativeLuminance(RGB);
         if (lum >= .1) {
             int targetRGB = getTargetRGBDarker(lum, 3.0);
             System.out.println("A grayscale color that is darker than this " +
-                    "and has a contrast ratio of 3 or greater with this color is" +
-                    "[ " + targetRGB + ", " + targetRGB + ", " + targetRGB + "]");
+                    "and has a contrast ratio of 3 or greater with this color is " +
+                    "[" + targetRGB + ", " + targetRGB + ", " + targetRGB + "]");
         }
         if (lum >= .175) {
             int targetRGB = getTargetRGBDarker(lum, 4.5);
             System.out.println("A grayscale color that is darker than this " +
-                    "and has a contrast ratio of 4.5 or greater with this color is" +
-                    "[ " + targetRGB + ", " + targetRGB + ", " + targetRGB + "]");
+                    "and has a contrast ratio of 4.5 or greater with this color is " +
+                    "[" + targetRGB + ", " + targetRGB + ", " + targetRGB + "]");
         }
         if (lum >= .3) {
             int targetRGB = getTargetRGBDarker(lum, 7.0);
             System.out.println("A grayscale color that is darker than this " +
-                    "and has a contrast ratio of 7 or greater with this color is" +
-                    "[ " + targetRGB + ", " + targetRGB + ", " + targetRGB + "]");
+                    "and has a contrast ratio of 7 or greater with this color is " +
+                    "[" + targetRGB + ", " + targetRGB + ", " + targetRGB + "]");
         }
     }
 
@@ -133,22 +134,40 @@ public class ColorNamer {
         if (lum <= .3) {
             int targetRGB = getTargetRGBBrighter(lum, 3.0);
             System.out.println("A grayscale color that is brighter than this " +
-                    "and has a contrast ratio of 3 or greater with this color is" +
-                    "[ " + targetRGB + ", " + targetRGB + ", " + targetRGB + "]");
+                    "and has a contrast ratio of 3 or greater with this color is " +
+                    "[" + targetRGB + ", " + targetRGB + ", " + targetRGB + "]");
         }
         if (lum <= (11.0/60.0)) {
             int targetRGB = getTargetRGBBrighter(lum, 4.5);
             System.out.println("A grayscale color that is brighter than this " +
-                    "and has a contrast ratio of 4.5 or greater with this color is" +
-                    "[ " + targetRGB + ", " + targetRGB + ", " + targetRGB + "]");
+                    "and has a contrast ratio of 4.5 or greater with this color is " +
+                    "[" + targetRGB + ", " + targetRGB + ", " + targetRGB + "]");
         }
         if (lum <= .1) {
             int targetRGB = getTargetRGBBrighter(lum, 7.0);
             System.out.println("A grayscale color that is brighter than this " +
-                    "and has a contrast ratio of 7 or greater with this color is" +
-                    "[ " + targetRGB + ", " + targetRGB + ", " + targetRGB + "]");
+                    "and has a contrast ratio of 7 or greater with this color is"  +
+                    "[" + targetRGB + ", " + targetRGB + ", " + targetRGB + "]");
         }
     }
+
+    public static double getRelativeLuminanceFromContRatioWithBlack(double contrastRatio) {
+        return contrastRatio*.05-.05;
+    }
+
+    /*
+    Midpoint luminance:
+    Of two colors, brighter and darker, with brighter having relative luminance greater than or
+    equal to darker, take the contrastRatio.
+    Then, take the square root of that contrast ratio. That is the desired contrast ratio (Dcr)
+    that brighter and darker should each have with midpoint color.
+    Let darkerLum be the relative luminance of darker.
+    Take (darkerLum+.05)*Dcr-.05. This is the relative luminance of the midpoint color.
+    You can now find colors that match the hue of each color but have midpoint brightness.
+    For example, if you darken (34, 177, 76) to its midpoint contrast ratio with (136, 0, 21), it's (23, 123, 53).
+    The other color, adjusted to essentially equal midpoint luminance, becomes (215, 0, 32).
+    (Brightness match is better and hue match worse with (22, 123, 53) and (215, 0, 38).)
+     */
 
 
 }
